@@ -85,4 +85,19 @@ describe Inventory_List do
       expect(list_item.status).to_not eq('NEW')
     end
   end
+
+  it "should be able to return a list of all items of a given status" do
+    bread = Food_Item.new(:type => "bread", :storage => "shelf", :exp_date => (Date.today - 5).to_s, :unit => "loaf", :qty => 1)
+    milk = Food_Item.new(:type => "milk", :storage => "refrigerator", :exp_date => (Date.today + 1).to_s, :unit => "quart", :qty => 1)
+    eggs = Food_Item.new(:type => "eggs", :storage => "refrigerator", :exp_date => (Date.today + 12).to_s, :unit => "single", :qty => 12)
+    subject.add(bread)
+    subject.add(milk)
+    subject.add(eggs)
+    subject.update_list
+
+    expect(subject.get_by_status('EXPIRED')[-1]).to eq(bread)
+    expect(subject.get_by_status('WARNING')[-1]).to eq(milk)
+    expect(subject.get_by_status('OK')[-1]).to eq(eggs)
+  end
+
 end

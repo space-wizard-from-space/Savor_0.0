@@ -11,8 +11,7 @@ describe Food_Item do
     expect(subject).to_not be nil
   end
 
-  it "should have a food type, expiration date, storage condition,
-      unit of measurement, quantity, and status" do
+  it "should have a food type, expiration date, storage condition, unit of measurement, quantity, and status" do
     expect(subject.type).not_to be nil
     expect(subject.storage).not_to be nil
     expect(subject.exp_date).not_to be nil
@@ -49,9 +48,6 @@ end
 
 describe Inventory_List do
   subject {Inventory_List.new}
-  # before {
-  #
-  # }
 
   it "should initialize" do
     expect(subject).to_not be nil
@@ -75,11 +71,6 @@ describe Inventory_List do
     expect(subject.list[-1]).to eq(milk)
   end
 
-  # it "should blah blah blah" do
-  #   expect(subject.list[-1].type).to eq("milk")
-  # end
-
-
   it "should be able to update the statuses of all items on the list" do
     bread = Food_Item.new(:type => "bread", :storage => "shelf", :exp_date => "2013-11-02", :unit => "loaf", :qty => 1)
     milk = Food_Item.new(:type => "milk", :storage => "refrigerator", :exp_date => "2013-10-29", :unit => "quart", :qty => 1)
@@ -90,7 +81,6 @@ describe Inventory_List do
 
     # expect(bread.status).to_not eq('NEW')
     # expect(milk.status).to_not eq('NEW')
-
     subject.list.each do |list_item|
       expect(list_item.status).to_not eq('NEW')
     end

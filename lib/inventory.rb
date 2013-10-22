@@ -9,9 +9,10 @@ class Food_Item
     @unit = options[:unit] || ''
     @qty = options[:qty] || 0
     @status = options[:status] || 'NEW'
+    @id = options[:id] || "ERROR:NO ID"
   end
 
-  attr_accessor :type, :storage, :exp_date, :unit, :qty, :status
+  attr_accessor :type, :storage, :exp_date, :unit, :qty, :status, :id
 
   def update
     if @exp_date == ''
@@ -29,7 +30,8 @@ end
 
 class Inventory_List
   def initialize
-    @list= []
+    @list = []
+    @last_ID_added = 0
   end
 
   attr_accessor :list
@@ -38,9 +40,19 @@ class Inventory_List
     if item.class == Food_Item then
       @list << item
       return true
-    else
-      return false
     end
+    return false
+  end
+
+  def create_item(options = {})
+    #Round this out - add error checking.
+    input_hash = options.merge({:id => get_available_ID})
+    self.add(Food_Item.new(input_hash))
+  end
+
+  def get_available_ID
+    @last_ID_added += 1
+    return @last_ID_added
   end
 
   def update_list
@@ -48,6 +60,26 @@ class Inventory_List
       item.update
     end
   end
+
+  def get_by_status(status)
+    selected_items = []
+    @list.each do |item|
+      if item.status == status then
+        selected_items << item
+      end
+    end
+    return selected_items
+  end
+
+  def get_by_ID(desired_ID)
+    @list.each do |item|
+      if item.id == desired_ID
+        return item
+      end
+    end
+    return "NO ITEM FOUND"
+  end
+
 end
 
 

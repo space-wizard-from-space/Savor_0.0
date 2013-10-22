@@ -90,6 +90,8 @@ describe Inventory_List do
     bread = Food_Item.new(:type => "bread", :storage => "shelf", :exp_date => (Date.today - 5).to_s, :unit => "loaf", :qty => 1)
     milk = Food_Item.new(:type => "milk", :storage => "refrigerator", :exp_date => (Date.today + 1).to_s, :unit => "quart", :qty => 1)
     eggs = Food_Item.new(:type => "eggs", :storage => "refrigerator", :exp_date => (Date.today + 12).to_s, :unit => "single", :qty => 12)
+    oranges = Food_Item.new(:type => "oranges", :storage => "refrigerator", :exp_date => (Date.today + 20).to_s, :unit => "single", :qty => 8)
+    subject.add(oranges)
     subject.add(bread)
     subject.add(milk)
     subject.add(eggs)
@@ -98,6 +100,28 @@ describe Inventory_List do
     expect(subject.get_by_status('EXPIRED')[-1]).to eq(bread)
     expect(subject.get_by_status('WARNING')[-1]).to eq(milk)
     expect(subject.get_by_status('OK')[-1]).to eq(eggs)
+    expect(subject.get_by_status('OK')[-2]).to eq(oranges)
+  end
+
+  it "should have a function to create items directly" do
+    subject.create_item(:type => "cheese", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "pound", :qty => 0.75)
+    expect(subject.list[0].type).to eq("cheese")
+  end
+
+  it "should assign new items an ID as they're created" do
+    subject.create_item(:type => "celery", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "single", :qty => 1)
+    subject.create_item(:type => "tomato", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "single", :qty => 1)
+
+    expect(subject.list[0].id).to eq(1)
+    expect(subject.list[1].id).to eq(2)
+  end
+
+  it "should be able to retrieve an item by its ID" do
+    subject.create_item(:type => "turnip", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "single", :qty => 1)
+    subject.create_item(:type => "potato", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "single", :qty => 1)
+    subject.create_item(:type => "jam", :storage => "refrigerator", :exp_date => (Date.today + 30).to_s, :unit => "single", :qty => 1)
+
+    expect(subject.get_by_ID(1).type).to eq("potato")
   end
 
 end
